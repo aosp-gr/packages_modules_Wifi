@@ -22,8 +22,10 @@ import android.content.IntentFilter;
 import android.net.MacAddress;
 import android.net.wifi.SoftApConfiguration;
 import android.net.wifi.SoftApConfiguration.BandType;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Process;
+import android.os.SystemProperties;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseIntArray;
@@ -346,8 +348,7 @@ public class WifiApConfigStore {
     private SoftApConfiguration getDefaultApConfiguration() {
         SoftApConfiguration.Builder configBuilder = new SoftApConfiguration.Builder();
         configBuilder.setBand(generateDefaultBand(mContext));
-        configBuilder.setSsid(mContext.getResources().getString(
-                R.string.wifi_tether_configure_ssid_default) + "_" + getRandomIntForDefaultSsid());
+        configBuilder.setSsid(SystemProperties.get("ro.product.marketname", Build.MODEL));
         if (ApConfigUtil.isWpa3SaeSupported(mContext)) {
             configBuilder.setPassphrase(generatePassword(),
                     SoftApConfiguration.SECURITY_TYPE_WPA3_SAE_TRANSITION);
@@ -384,9 +385,7 @@ public class WifiApConfigStore {
     }
 
     private static String generateLohsSsid(Context context) {
-        return context.getResources().getString(
-                R.string.wifi_localhotspot_configure_ssid_default) + "_"
-                + getRandomIntForDefaultSsid();
+        return SystemProperties.get("ro.product.marketname", Build.MODEL);
     }
 
     /**
